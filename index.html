@@ -1,0 +1,2946 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Pixel Art</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel=stylesheet href="css/base.css"/>
+</head>
+<body>
+
+<script src="js/Three.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/Stats.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/THREEx.KeyboardState.js"></script>
+<script src="js/THREEx.FullScreen.js"></script>
+<script src="js/THREEx.WindowResize.js"></script>
+
+<style>
+	body {
+		background:#003366;		color:#fff;
+		padding:0;				margin:0;
+		overflow:hidden;		font-family:georgia;
+		text-align:center;
+	}
+	a {	color: #ff0080;	text-decoration: none; }
+	a:hover { color: #0080ff; }
+</style>
+<!-- jQuery code to display an information button and box when clicked. -->
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/jquery-ui.js"></script>
+<link rel=stylesheet href="css/jquery-ui.css" />
+<link rel=stylesheet href="css/info.css"/>
+<script src="js/info.js"></script>
+<div id="infoButton"></div>
+<div id="infoBox" title="Demo Information">
+Chun Li and Sakura
+</div>
+<!-- ------------------------------------------------------------ -->
+
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+<script>
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var sakura, chunli;
+var keyboard = new THREEx.KeyboardState();
+var clock = new THREE.Clock();
+// custom global variables
+var cube;
+
+init();
+animate();
+
+// FUNCTIONS 		
+function init() 
+{
+	// SCENE
+	scene = new THREE.Scene();
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+	camera = new THREE.PerspectiveCamera( 45,
+					window.innerWidth / window.innerHeight, .1, 10000 );
+				camera.position.z = 30;
+				camera.position.x = 0;
+				camera.position.y = 0;
+	// RENDERER
+	// if ( Detector.webgl )
+	// 	renderer = new THREE.WebGLRenderer( {antialias:true} );
+	// else
+	// 	renderer = new THREE.CanvasRenderer(); 
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	// EVENTS
+	THREEx.WindowResize(renderer, camera);
+	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+	// CONTROLS
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
+	// STATS
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
+
+	scene.fog = new THREE.FogExp2( 0x003366, 0.0025 );
+	var pointLight = new THREE.PointLight( 0xFFFFFF );
+	pointLight.position.z = 1000;
+	scene.add(pointLight);
+	
+	////////////
+	// CUSTOM //
+	////////////
+	sakura = new THREE.Object3D();
+	drawSakura();	
+	sakura.position.x = 40;
+	sakura.position.y = 0;
+	sakura.rotation.y = Math.PI * -1 / 4;
+	scene.add( sakura );
+
+	chunli = new THREE.Object3D();
+	drawChunli();
+	chunli.position.x = -40;
+	chunli.position.y = 0;
+	chunli.rotation.y = Math.PI * 1 / 4;
+	scene.add( chunli );
+
+	camera.position.x = 0;
+	camera.position.y = 0;
+	camera.position.z = 200;
+
+}
+
+function helper(o, x, y, z, w, h, d, c)
+{
+	var material = new THREE.MeshLambertMaterial( { color: c} );
+	var geometry = new THREE.CubeGeometry(w, h, d, 1, 1, 1);
+	var mesh = new THREE.Mesh( geometry, material );
+	mesh.position.x=x+(w/2);
+	mesh.position.y=y-(h/2);
+	mesh.position.z=z+(d/2);
+	o.add( mesh );
+}
+
+function animate() 
+{
+    requestAnimationFrame( animate );
+	render();		
+	update();
+}
+
+function update()
+{
+	if ( keyboard.pressed("z") ) 
+	{ 
+		// do something
+	}
+	
+	controls.update();
+	stats.update();
+}
+
+function render() 
+{
+	renderer.render( scene, camera );
+}
+
+function drawSakura()
+{
+	var sakuraX = -35;
+	var sakuraY = 20;
+	var handZ = 4;
+	var bandZ = 3;
+	helper ( sakura, sakuraX + 33, sakuraY - 4, 0, 9, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 30, sakuraY - 5, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 33, sakuraY - 5, 0, 1, 1, 1, 0x602010 );
+	helper ( sakura, sakuraX + 34, sakuraY - 5, 0, 8, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 42, sakuraY - 5, 0, 2, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 27, sakuraY - 6, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 6, 0, 1, 1, 1, 0x602010 );
+	helper ( sakura, sakuraX + 31, sakuraY - 6, 0, 9, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 40, sakuraY - 6, 0, 8, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 16, sakuraY - 7, 0, 11, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 7, 0, 1, 1, 1, 0x602010 );
+	helper ( sakura, sakuraX + 28, sakuraY - 7, 0, 10, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 38, sakuraY - 7, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 40, sakuraY - 7, 0, 8, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 48, sakuraY - 7, 0, 2, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 17, sakuraY - 8, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 8, 0, 1, 1, 1, 0x602010 );
+	helper ( sakura, sakuraX + 19, sakuraY - 8, 0, 18, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 37, sakuraY - 8, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 8, 0, 12, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 50, sakuraY - 8, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 18, sakuraY - 9, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 9, 0, 1, 1, 1, 0x602010 );
+	helper ( sakura, sakuraX + 20, sakuraY - 9, 0, 31, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 51, sakuraY - 9, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 19, sakuraY - 10, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 10, 0, 1, 1, 1, 0x602010 );
+	helper ( sakura, sakuraX + 21, sakuraY - 10, 0, 31, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 52, sakuraY - 10, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 20, sakuraY - 11, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 11, 0, 31, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 53, sakuraY - 11, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 20, sakuraY - 12, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 12, 0, 32, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 53, sakuraY - 12, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 19, sakuraY - 13, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 13, 0, 34, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 54, sakuraY - 13, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 18, sakuraY - 14, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 14, 0, 35, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 54, sakuraY - 14, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 17, sakuraY - 15, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 15, 0, 37, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 55, sakuraY - 15, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 67, sakuraY - 15, 0, 3, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 17, sakuraY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 16, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 21, sakuraY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 16, 0, 21, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 43, sakuraY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 16, 0, 11, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 55, sakuraY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 16, 0, 2, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 16, 0, 2, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 16, 0, 6, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 17, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 20, sakuraY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 17, 0, 5, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 26, sakuraY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 17, 0, 15, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 42, sakuraY - 17, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 17, 0, 12, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 56, sakuraY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 65, sakuraY - 17, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 17, 0, 1, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 17, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 17, 0, 3, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 17, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 17, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 76, sakuraY - 17, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 18, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 19, sakuraY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 18, 0, 5, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 25, sakuraY - 18, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 18, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 33, sakuraY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 18, 0, 7, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 41, sakuraY - 18, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 18, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 50, sakuraY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 18, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 53, sakuraY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 18, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 56, sakuraY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 65, sakuraY - 18, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 18, 0, 1, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 18, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 18, 0, 9, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 77, sakuraY - 18, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 19, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 19, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 19, 0, 4, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 24, sakuraY - 19, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 19, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 33, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 19, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 40, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 19, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 19, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 50, sakuraY - 19, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 52, sakuraY - 19, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 53, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 19, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 57, sakuraY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 65, sakuraY - 19, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 19, 0, 1, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 19, 0, 5, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 19, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 77, sakuraY - 19, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 20, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 18, sakuraY - 20, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 20, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 23, sakuraY - 20, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 20, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 20, 0, 5, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 32, sakuraY - 20, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 20, 0, 5, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 39, sakuraY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 40, sakuraY - 20, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 20, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 50, sakuraY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 20, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 52, sakuraY - 20, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 20, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 55, sakuraY - 20, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 62, sakuraY - 20, 0, 5, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 67, sakuraY - 20, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 72, sakuraY - 20, 0, 6, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 21, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 21, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 22, sakuraY - 21, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 21, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 21, 0, 4, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 32, sakuraY - 21, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 21, 0, 4, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 38, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 21, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 21, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 50, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 21, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 53, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 21, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 56, sakuraY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 61, sakuraY - 21, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 62, sakuraY - 21, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 66, sakuraY - 21, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 67, sakuraY - 21, 0, 6, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 21, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 21, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 78, sakuraY - 21, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 22, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 21, sakuraY - 22, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 22, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 22, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 31, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 22, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 22, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 37, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 22, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 22, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 50, sakuraY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 22, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 57, sakuraY - 22, 0, 5, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 62, sakuraY - 22, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 22, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 22, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 22, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 22, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 22, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 19, sakuraY - 23, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 23, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 24, sakuraY - 23, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 23, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 23, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 31, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 23, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 23, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 36, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 23, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 23, 0, 5, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 49, sakuraY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 23, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 56, sakuraY - 23, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 57, sakuraY - 23, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 23, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 23, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 23, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 23, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 23, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 23, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 23, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 19, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 24, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 24, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 24, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 24, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 30, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 24, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 24, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 35, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 36, sakuraY - 24, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 24, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 24, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 45, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 24, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 49, sakuraY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 24, 0, 5, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 55, sakuraY - 24, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 56, sakuraY - 24, 0, 6, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 24, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 24, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 24, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 24, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 24, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 24, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 24, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 22, sakuraY - 25, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 25, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 25, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 25, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 25, 0, 6, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 35, sakuraY - 25, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 25, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 40, sakuraY - 25, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 25, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 25, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 48, sakuraY - 25, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 25, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 55, sakuraY - 25, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 56, sakuraY - 25, 0, 6, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 25, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 25, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 25, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 25, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 25, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 25, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 25, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 22, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 26, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 26, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 26, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 26, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 26, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 26, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 26, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 26, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 26, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 26, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 48, sakuraY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 26, 0, 6, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 55, sakuraY - 26, 0, 2, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 57, sakuraY - 26, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 26, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 26, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 26, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 26, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 26, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 26, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 26, 0, 1, 1, handZ, 0x000000 );
+	
+	helper ( sakura, sakuraX + 22, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 27, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 24, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 27, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 27, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 36, sakuraY - 27, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 27, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 27, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 27, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 47, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 27, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 49, sakuraY - 27, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 27, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 54, sakuraY - 27, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 27, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 27, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 57, sakuraY - 27, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 27, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 27, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 27, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 27, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 27, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 27, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 27, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 22, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 28, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 28, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 28, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 28, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 28, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 28, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 28, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 28, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 28, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 48, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 28, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 51, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 52, sakuraY - 28, 0, 2, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 54, sakuraY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 28, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 28, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 57, sakuraY - 28, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 28, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 28, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 28, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 28, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 28, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 28, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 28, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 23, sakuraY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 29, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 29, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 29, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 29, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 29, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 29, 0, 6, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 29, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 29, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 29, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 29, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 29, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 52, sakuraY - 29, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 29, 0, 2, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 29, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 57, sakuraY - 29, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 62, sakuraY - 29, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 29, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 29, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 29, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 29, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 29, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 79, sakuraY - 29, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 23, sakuraY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 30, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 30, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 30, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 27, sakuraY - 30, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 30, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 30, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 30, 0, 1, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 40, sakuraY - 30, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 30, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 30, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 30, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 52, sakuraY - 30, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 30, 0, 2, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 30, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 57, sakuraY - 30, 0, 21, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 78, sakuraY - 30, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 23, sakuraY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 31, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 31, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 31, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 31, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 31, 0, 3, 1, 1, 0xA04020 );
+	helper ( sakura, sakuraX + 41, sakuraY - 31, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 31, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 31, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 31, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 31, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 52, sakuraY - 31, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 31, 0, 2, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 31, 0, 3, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 59, sakuraY - 31, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 63, sakuraY - 31, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 31, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 31, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 31, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 74, sakuraY - 31, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 75, sakuraY - 31, 0, 3, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 78, sakuraY - 31, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 23, sakuraY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 32, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 32, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 32, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 32, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 32, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 32, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 32, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 51, sakuraY - 32, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 54, sakuraY - 32, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 55, sakuraY - 32, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 56, sakuraY - 32, 0, 3, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 59, sakuraY - 32, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 61, sakuraY - 32, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 32, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 32, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 32, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 32, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 74, sakuraY - 32, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 75, sakuraY - 32, 0, 3, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 78, sakuraY - 32, 0, 1, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 23, sakuraY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 33, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 33, 0, 18, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 33, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 33, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 51, sakuraY - 33, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 33, 0, 6, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 61, sakuraY - 33, 0, 3, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 33, 0, 4, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 33, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 33, 0, 5, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 74, sakuraY - 33, 0, 1, 1, handZ, 0x000000 );
+	helper ( sakura, sakuraX + 75, sakuraY - 33, 0, 2, 1, handZ, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 77, sakuraY - 33, 0, 2, 1, handZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 23, sakuraY - 34, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 34, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 34, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 34, 0, 19, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 34, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 34, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 50, sakuraY - 34, 0, 5, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 34, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 34, 0, 4, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 60, sakuraY - 34, 0, 4, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 64, sakuraY - 34, 0, 13, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 77, sakuraY - 34, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 78, sakuraY - 34, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 24, sakuraY - 35, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 35, 0, 21, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 35, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 35, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 35, 0, 4, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 53, sakuraY - 35, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 54, sakuraY - 35, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 56, sakuraY - 35, 0, 4, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 60, sakuraY - 35, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 61, sakuraY - 35, 0, 17, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 78, sakuraY - 35, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 22, sakuraY - 36, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 36, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 24, sakuraY - 36, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 36, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 36, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 36, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 36, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 36, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 36, 0, 4, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 52, sakuraY - 36, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 53, sakuraY - 36, 0, 1, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 54, sakuraY - 36, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 36, 0, 6, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 61, sakuraY - 36, 0, 3, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 36, 0, 13, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 77, sakuraY - 36, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 21, sakuraY - 37, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 37, 0, 3, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 25, sakuraY - 37, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 37, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 37, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 35, sakuraY - 37, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 37, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 37, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 37, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 37, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 37, 0, 3, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 51, sakuraY - 37, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 52, sakuraY - 37, 0, 2, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 54, sakuraY - 37, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 37, 0, 9, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 64, sakuraY - 37, 0, 13, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 20, sakuraY - 38, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 38, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 23, sakuraY - 38, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 38, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 38, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 38, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 38, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 33, sakuraY - 38, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 38, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 38, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 38, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 38, 0, 4, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 51, sakuraY - 38, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 52, sakuraY - 38, 0, 3, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 55, sakuraY - 38, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 56, sakuraY - 38, 0, 17, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 73, sakuraY - 38, 0, 2, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 19, sakuraY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 39, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 22, sakuraY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 39, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 39, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 32, sakuraY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 33, sakuraY - 39, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 39, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 42, sakuraY - 39, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 39, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 50, sakuraY - 39, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 39, 0, 5, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 56, sakuraY - 39, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 58, sakuraY - 39, 0, 13, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 71, sakuraY - 39, 0, 2, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 18, sakuraY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 40, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 21, sakuraY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 40, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 40, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 40, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 40, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 40, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 43, sakuraY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 40, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 50, sakuraY - 40, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 40, 0, 7, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 58, sakuraY - 40, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 60, sakuraY - 40, 0, 8, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 68, sakuraY - 40, 0, 3, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 17, sakuraY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 41, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 20, sakuraY - 41, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 41, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 41, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 41, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 41, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 41, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 42, sakuraY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 41, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 41, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 41, 0, 10, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 60, sakuraY - 41, 0, 8, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 41, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 41, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 42, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 19, sakuraY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 42, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 42, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 42, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 42, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 42, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 42, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 41, sakuraY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 42, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 42, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 42, 0, 15, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 65, sakuraY - 42, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 68, sakuraY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 42, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 72, sakuraY - 42, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 43, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 18, sakuraY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 43, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 23, sakuraY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 43, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 43, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 32, sakuraY - 43, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 43, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 39, sakuraY - 43, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 43, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 43, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 43, 0, 15, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 65, sakuraY - 43, 0, 2, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 69, sakuraY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 70, sakuraY - 43, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 43, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 16, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 44, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 18, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 44, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 24, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 44, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 44, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 44, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 44, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 44, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 44, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 44, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 44, 0, 14, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 64, sakuraY - 44, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 65, sakuraY - 44, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 70, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 71, sakuraY - 44, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 44, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 17, sakuraY - 45, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 45, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 45, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 45, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 45, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 45, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 45, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 45, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 45, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 45, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 45, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 45, 0, 13, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 64, sakuraY - 45, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 65, sakuraY - 45, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 45, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 70, sakuraY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 71, sakuraY - 45, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 45, 0, 2, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 17, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 46, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 20, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 46, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 46, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 46, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 46, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 46, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 35, sakuraY - 46, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 46, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 46, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 46, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 46, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 46, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 51, sakuraY - 46, 0, 12, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 63, sakuraY - 46, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 65, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 46, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 71, sakuraY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 46, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 46, 0, 2, 1, 1, 0x000000 );
+
+
+	helper ( sakura, sakuraX + 18, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 47, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 21, sakuraY - 47, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 47, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 47, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 47, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 47, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 33, sakuraY - 47, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 47, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 47, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 47, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 47, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 47, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 47, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 50, sakuraY - 47, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 51, sakuraY - 47, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 52, sakuraY - 47, 0, 11, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 63, sakuraY - 47, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 65, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 47, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 71, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 47, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 47, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 75, sakuraY - 47, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 48, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 48, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 48, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 48, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 48, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 48, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 48, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 48, 0, 1, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 40, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 48, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 48, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 48, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 48, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 48, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 52, sakuraY - 48, 0, 1, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 53, sakuraY - 48, 0, 9, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 62, sakuraY - 48, 0, 1, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 66, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 67, sakuraY - 48, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 71, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 48, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 48, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 75, sakuraY - 48, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 49, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 49, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 22, sakuraY - 49, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 49, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 49, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 30, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 49, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 49, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 49, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 49, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 41, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 49, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 49, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 49, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 49, sakuraY - 49, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 53, sakuraY - 49, 0, 2, 1, bandZ, 0x000000 );
+	helper ( sakura, sakuraX + 55, sakuraY - 49, 0, 5, 1, bandZ, 0xF01030 );
+	helper ( sakura, sakuraX + 60, sakuraY - 49, 0, 2, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 66, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 67, sakuraY - 49, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 72, sakuraY - 49, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 74, sakuraY - 49, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 75, sakuraY - 49, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 11, sakuraY - 50, 0, 1, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 12, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 50, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 50, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 29, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 50, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 50, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 34, sakuraY - 50, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 50, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 50, 0, 2, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 39, sakuraY - 50, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 50, 0, 1, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 42, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 50, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 50, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 50, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 55, sakuraY - 50, 0, 5, 1, bandZ, 0x000000 );
+
+	helper ( sakura, sakuraX + 67, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 50, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 72, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 73, sakuraY - 50, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 75, sakuraY - 50, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 11, sakuraY - 51, 0, 2, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 13, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 51, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 51, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 28, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 51, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 51, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 51, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 51, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 35, sakuraY - 51, 0, 2, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 37, sakuraY - 51, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 51, 0, 2, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 41, sakuraY - 51, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 51, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 51, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 51, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 57, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 67, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 51, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 72, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 73, sakuraY - 51, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 75, sakuraY - 51, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 11, sakuraY - 52, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 14, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 52, 0, 5, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 28, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 52, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 52, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 52, 0, 6, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 52, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 40, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 52, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 42, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 52, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 52, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 52, 0, 10, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 57, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 67, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 52, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 52, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 52, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 75, sakuraY - 52, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 11, sakuraY - 53, 0, 4, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 15, sakuraY - 53, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 53, 0, 2, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 26, sakuraY - 53, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 53, 0, 8, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 39, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 40, sakuraY - 53, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 53, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 53, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 53, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 56, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 68, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 53, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 53, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 53, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 74, sakuraY - 53, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 11, sakuraY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 12, sakuraY - 54, 0, 5, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 17, sakuraY - 54, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 54, 0, 1, 1, 1, 0xF01030 );
+	helper ( sakura, sakuraX + 25, sakuraY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 54, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 54, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 54, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 54, 0, 8, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 39, sakuraY - 54, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 54, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 54, 0, 11, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 56, sakuraY - 54, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 68, sakuraY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 54, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 54, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 54, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 74, sakuraY - 54, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 11, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 12, sakuraY - 55, 0, 7, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 19, sakuraY - 55, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 55, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 55, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 55, 0, 15, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 55, 0, 10, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 55, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 68, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 55, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 55, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 55, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 74, sakuraY - 55, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 12, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 13, sakuraY - 56, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 16, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 56, 0, 4, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 21, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 24, sakuraY - 56, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 56, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 56, 0, 1, 1, 1, 0x00000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 56, 0, 16, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 56, 0, 10, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 55, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 66, sakuraY - 56, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 56, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 70, sakuraY - 56, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 56, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 56, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( sakura, sakuraX + 13, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 14, sakuraY - 57, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 17, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 57, 0, 4, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 22, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( sakura, sakuraX + 24, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 57, 0, 1, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 26, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 57, 0, 18, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 57, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 54, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 62, sakuraY - 57, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 57, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 70, sakuraY - 57, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 72, sakuraY - 57, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 73, sakuraY - 57, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 14, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 15, sakuraY - 58, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 18, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 58, 0, 4, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 23, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 58, 0, 1, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 25, sakuraY - 58, 0, 1, 1, 1, 0x000000 );	
+	helper ( sakura, sakuraX + 26, sakuraY - 58, 0, 9, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 58, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 40, sakuraY - 58, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 58, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 53, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 63, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 58, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 70, sakuraY - 58, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 58, 0, 2, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 12, sakuraY - 59, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 16, sakuraY - 59, 0, 3, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 19, sakuraY - 59, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 59, 0, 1, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 24, sakuraY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 59, 0, 9, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 34, sakuraY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 35, sakuraY - 59, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 59, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 59, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 59, 0, 6, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 64, sakuraY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 65, sakuraY - 59, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 59, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 59, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 6, sakuraY - 60, 0, 6, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 12, sakuraY - 60, 0, 4, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 16, sakuraY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 60, 0, 7, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 24, sakuraY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 60, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 60, 0, 8, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 34, sakuraY - 60, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 42, sakuraY - 60, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 44, sakuraY - 60, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 60, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 65, sakuraY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 60, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 69, sakuraY - 60, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 60, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 7, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 8, sakuraY - 61, 0, 6, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 14, sakuraY - 61, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 61, 0, 4, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 23, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 25, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 61, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 61, 0, 13, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 61, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 48, sakuraY - 61, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 65, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 61, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 68, sakuraY - 61, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 61, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 8, sakuraY - 62, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 10, sakuraY - 62, 0, 9, 1, 1, 0xF0A010 );
+	helper ( sakura, sakuraX + 19, sakuraY - 62, 0, 4, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 26, sakuraY - 62, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 62, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 62, 0, 14, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 62, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 62, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 62, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 62, 0, 2, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 65, sakuraY - 62, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 67, sakuraY - 62, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 71, sakuraY - 62, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 10, sakuraY - 63, 0, 9, 1, 1, 0x000000 );	
+	helper ( sakura, sakuraX + 27, sakuraY - 63, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 63, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 34, sakuraY - 63, 0, 9, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 63, 0, 5, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 64, sakuraY - 63, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 66, sakuraY - 63, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 63, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 29, sakuraY - 64, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 64, 0, 5, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 64, 0, 10, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 64, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 62, sakuraY - 64, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 64, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 64, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 27, sakuraY - 65, 0, 16, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 43, sakuraY - 65, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 65, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 58, sakuraY - 65, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 62, sakuraY - 65, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 65, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 24, sakuraY - 66, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 66, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 66, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 66, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 32, sakuraY - 66, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 33, sakuraY - 66, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 66, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 66, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 66, 0, 3, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 66, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 66, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 66, 0, 3, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 59, sakuraY - 66, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 60, sakuraY - 66, 0, 10, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 70, sakuraY - 66, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 21, sakuraY - 67, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 67, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 27, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 67, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 67, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 67, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 67, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 67, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 67, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 67, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 67, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 67, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 60, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 61, sakuraY - 67, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 67, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 14, sakuraY - 68, 0, 7, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 21, sakuraY - 68, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 68, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 27, sakuraY - 68, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 68, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 34, sakuraY - 68, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 68, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 68, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 68, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 68, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 68, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 68, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 61, sakuraY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 62, sakuraY - 68, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 68, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 13, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 14, sakuraY - 69, 0, 9, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 23, sakuraY - 69, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 25, sakuraY - 69, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 29, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 30, sakuraY - 69, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 34, sakuraY - 69, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 69, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 38, sakuraY - 69, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 39, sakuraY - 69, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 69, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 69, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 69, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 61, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 62, sakuraY - 69, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 69, sakuraY - 69, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 12, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 13, sakuraY - 70, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 14, sakuraY - 70, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 17, sakuraY - 70, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 19, sakuraY - 70, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 70, 0, 5, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 29, sakuraY - 70, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 33, sakuraY - 70, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 34, sakuraY - 70, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 70, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 70, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 43, sakuraY - 70, 0, 4, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 47, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 62, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 70, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 70, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 12, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 13, sakuraY - 71, 0, 4, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 17, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 18, sakuraY - 71, 0, 8, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 26, sakuraY - 71, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 71, 0, 9, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 37, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 38, sakuraY - 71, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 42, sakuraY - 71, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 71, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 71, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 62, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 71, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 68, sakuraY - 71, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 12, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 13, sakuraY - 72, 0, 5, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 18, sakuraY - 72, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 23, sakuraY - 72, 0, 1, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 24, sakuraY - 72, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 72, 0, 5, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 72, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 72, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 72, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 42, sakuraY - 72, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 72, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 45, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 46, sakuraY - 72, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 62, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 63, sakuraY - 72, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 72, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 12, sakuraY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 13, sakuraY - 73, 0, 6, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 19, sakuraY - 73, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 24, sakuraY - 73, 0, 6, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 31, sakuraY - 73, 0, 5, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 37, sakuraY - 73, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 73, 0, 1, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 42, sakuraY - 73, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 73, 0, 4, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 48, sakuraY - 73, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 63, sakuraY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 73, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 67, sakuraY - 73, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( sakura, sakuraX + 13, sakuraY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 14, sakuraY - 74, 0, 7, 1, 1, 0x0000A0 );		
+	helper ( sakura, sakuraX + 21, sakuraY - 74, 0, 4, 1, 1, 0x000000 );		
+	helper ( sakura, sakuraX + 25, sakuraY - 74, 0, 4, 1, 1, 0x3040F0 );		
+	helper ( sakura, sakuraX + 29, sakuraY - 74, 0, 1, 1, 1, 0x000000 );		
+	helper ( sakura, sakuraX + 30, sakuraY - 74, 0, 5, 1, 1, 0x3040F0 );		
+	helper ( sakura, sakuraX + 35, sakuraY - 74, 0, 1, 1, 1, 0x000000 );		
+	helper ( sakura, sakuraX + 36, sakuraY - 74, 0, 5, 1, 1, 0x3040F0 );		
+	helper ( sakura, sakuraX + 41, sakuraY - 74, 0, 1, 1, 1, 0x0000A0 );		
+	helper ( sakura, sakuraX + 42, sakuraY - 74, 0, 2, 1, 1, 0x3040F0 );		
+	helper ( sakura, sakuraX + 44, sakuraY - 74, 0, 2, 1, 1, 0x0000A0 );		
+	helper ( sakura, sakuraX + 46, sakuraY - 74, 0, 1, 1, 1, 0x000000 );		
+	helper ( sakura, sakuraX + 47, sakuraY - 74, 0, 2, 1, 1, 0x0000A0 );		
+	helper ( sakura, sakuraX + 49, sakuraY - 74, 0, 1, 1, 1, 0x000000 );		
+
+	helper ( sakura, sakuraX + 63, sakuraY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 74, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 66, sakuraY - 74, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 14, sakuraY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 15, sakuraY - 75, 0, 7, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 22, sakuraY - 75, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 26, sakuraY - 75, 0, 2, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 28, sakuraY - 75, 0, 7, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 35, sakuraY - 75, 0, 9, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 75, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 75, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 75, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 63, sakuraY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 64, sakuraY - 75, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( sakura, sakuraX + 65, sakuraY - 75, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 15, sakuraY - 76, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 19, sakuraY - 76, 0, 4, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 23, sakuraY - 76, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 76, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 30, sakuraY - 76, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 76, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 35, sakuraY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 36, sakuraY - 76, 0, 4, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 40, sakuraY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 76, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 76, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 76, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 76, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 63, sakuraY - 76, 0, 2, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 19, sakuraY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 20, sakuraY - 77, 0, 4, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 24, sakuraY - 77, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 77, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 77, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 36, sakuraY - 77, 0, 5, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 41, sakuraY - 77, 0, 3, 1, 1, 0x3040F0 );
+	helper ( sakura, sakuraX + 44, sakuraY - 77, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 46, sakuraY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 47, sakuraY - 77, 0, 2, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 77, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 63, sakuraY - 77, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 20, sakuraY - 78, 0, 2, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 22, sakuraY - 78, 0, 3, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 25, sakuraY - 78, 0, 3, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 28, sakuraY - 78, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 31, sakuraY - 78, 0, 1, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 32, sakuraY - 78, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( sakura, sakuraX + 41, sakuraY - 78, 0, 4, 1, 1, 0x000000 );
+	helper ( sakura, sakuraX + 45, sakuraY - 78, 0, 4, 1, 1, 0x0000A0 );
+	helper ( sakura, sakuraX + 49, sakuraY - 78, 0, 1, 1, 1, 0x000000 );
+
+	helper ( sakura, sakuraX + 22, sakuraY - 79, 0, 27, 1, 1, 0x000000 );
+}
+
+function drawChunli()
+{
+	var chunliX = -35;
+	var chunliY = 20;
+	helper ( chunli, chunliX + 36, chunliY - 4, 0, 5, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 34, chunliY - 5, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 5, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 41, chunliY - 5, 0, 11, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 5, 0, 4, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 33, chunliY - 6, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 6, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 39, chunliY - 6, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 41, chunliY - 6, 0, 1, 1, 1, 0x601010 );
+	helper ( chunli, chunliX + 42, chunliY - 6, 0, 10, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 52, chunliY - 6, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 6, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 6, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 61, chunliY - 6, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 32, chunliY - 7, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 7, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 37, chunliY - 7, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 39, chunliY - 7, 0, 1, 1, 1, 0x601010 );
+	helper ( chunli, chunliX + 40, chunliY - 7, 0, 15, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 55, chunliY - 7, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 7, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 58, chunliY - 7, 0, 5, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 32, chunliY - 8, 0, 7, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 39, chunliY - 8, 0, 16, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 55, chunliY - 8, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 8, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 8, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 63, chunliY - 8, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 30, chunliY - 9, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 9, 0, 7, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 39, chunliY - 9, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 41, chunliY - 9, 0, 13, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 54, chunliY - 9, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 9, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 56, chunliY - 9, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 9, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 64, chunliY - 9, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 65, chunliY - 9, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 28, chunliY - 10, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 10, 0, 11, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 41, chunliY - 10, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 42, chunliY - 10, 0, 12, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 54, chunliY - 10, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 10, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 10, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 10, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 10, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 66, chunliY - 10, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 27, chunliY - 11, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 11, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 30, chunliY - 11, 0, 1, 1, 1, 0xF0D0B0 );	
+	helper ( chunli, chunliX + 31, chunliY - 11, 0, 24, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 55, chunliY - 11, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 11, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 11, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 11, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 11, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 66, chunliY - 11, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 26, chunliY - 12, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 12, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 12, 0, 2, 1, 1, 0xF0D0B0 );	
+	helper ( chunli, chunliX + 31, chunliY - 12, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 32, chunliY - 12, 0, 1, 1, 1, 0xF0D0B0 );	
+	helper ( chunli, chunliX + 33, chunliY - 12, 0, 21, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 54, chunliY - 12, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 12, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 12, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 12, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 12, 0, 2, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 12, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 25, chunliY - 13, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 13, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 28, chunliY - 13, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 13, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 34, chunliY - 13, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 35, chunliY - 13, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 36, chunliY - 13, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 37, chunliY - 13, 0, 17, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 54, chunliY - 13, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 13, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 56, chunliY - 13, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 13, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 13, 0, 2, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 13, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 25, chunliY - 14, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 14, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 27, chunliY - 14, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 14, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 34, chunliY - 14, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 36, chunliY - 14, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 39, chunliY - 14, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 14, 0, 14, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 54, chunliY - 14, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 14, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 14, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 14, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 14, 0, 2, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 14, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 24, chunliY - 15, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 25, chunliY - 15, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 27, chunliY - 15, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 29, chunliY - 15, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 30, chunliY - 15, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 15, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 32, chunliY - 15, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 15, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 34, chunliY - 15, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 35, chunliY - 15, 0, 4, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 39, chunliY - 15, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 15, 0, 15, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 55, chunliY - 15, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 15, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 15, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 15, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 64, chunliY - 15, 0, 3, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 15, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 24, chunliY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 25, chunliY - 16, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 27, chunliY - 16, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 28, chunliY - 16, 0, 4, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 32, chunliY - 16, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 16, 0, 5, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 38, chunliY - 16, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 16, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 43, chunliY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 16, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 47, chunliY - 16, 0, 5, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 16, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 55, chunliY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 16, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 16, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 16, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 63, chunliY - 16, 0, 4, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 16, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 17, 0, 14, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 38, chunliY - 17, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 17, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 42, chunliY - 17, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 17, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 45, chunliY - 17, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 17, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 50, chunliY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 51, chunliY - 17, 0, 4, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 55, chunliY - 17, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 17, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 58, chunliY - 17, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 17, 0, 7, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 17, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 18, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 26, chunliY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 18, 0, 11, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 38, chunliY - 18, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 18, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 41, chunliY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 42, chunliY - 18, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 43, chunliY - 18, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 45, chunliY - 18, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 49, chunliY - 18, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 18, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 56, chunliY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 18, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 60, chunliY - 18, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 18, 0, 5, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 66, chunliY - 18, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 19, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 26, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 19, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 19, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 33, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 19, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 37, chunliY - 19, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 41, chunliY - 19, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 43, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 19, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 53, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 54, chunliY - 19, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 56, chunliY - 19, 0, 1, 1, 1, 0x601010 );
+	helper ( chunli, chunliX + 57, chunliY - 19, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 19, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 60, chunliY - 19, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 19, 0, 3, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 64, chunliY - 19, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 20, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 25, chunliY - 20, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 20, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 20, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 33, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 20, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 37, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 20, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 39, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 20, 0, 11, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 51, chunliY - 20, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 20, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 58, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 20, 0, 2, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 61, chunliY - 20, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 64, chunliY - 20, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 65, chunliY - 20, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 21, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 25, chunliY - 21, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 21, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 21, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 21, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 33, chunliY - 21, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 21, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 37, chunliY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 21, 0, 14, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 52, chunliY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 21, 0, 6, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 59, chunliY - 21, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 21, 0, 4, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 64, chunliY - 21, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 22, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 22, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 22, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 22, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 33, chunliY - 22, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 22, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 37, chunliY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 22, 0, 15, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 53, chunliY - 22, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 54, chunliY - 22, 0, 5, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 59, chunliY - 22, 0, 5, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 23, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 23, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 23, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 32, chunliY - 23, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 23, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 35, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 23, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 37, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 23, 0, 16, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 23, 0, 4, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 59, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 23, 0, 4, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 64, chunliY - 23, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 24, 0, 2, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 24, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 24, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 35, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 24, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 37, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 24, 0, 14, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 52, chunliY - 24, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 24, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 59, chunliY - 24, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 24, 0, 4, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 65, chunliY - 24, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 27, chunliY - 25, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 25, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 25, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 25, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 25, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 25, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 36, chunliY - 25, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 25, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 46, chunliY - 25, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 25, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 53, chunliY - 25, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 54, chunliY - 25, 0, 4, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 58, chunliY - 25, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 25, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 66, chunliY - 25, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 27, chunliY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 26, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 29, chunliY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 26, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 32, chunliY - 26, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 26, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 37, chunliY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 26, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 44, chunliY - 26, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 46, chunliY - 26, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 26, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 26, 0, 1, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 56, chunliY - 26, 0, 6, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 26, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 66, chunliY - 26, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 28, chunliY - 27, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 27, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 27, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 27, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 43, chunliY - 27, 0, 7, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 27, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 27, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 27, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 59, chunliY - 27, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 27, 0, 5, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 66, chunliY - 27, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 29, chunliY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 30, chunliY - 28, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 28, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 32, chunliY - 28, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 28, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 35, chunliY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 28, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 42, chunliY - 28, 0, 5, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 28, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 48, chunliY - 28, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 51, chunliY - 28, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 28, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 28, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 28, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 28, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 60, chunliY - 28, 0, 6, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 28, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 29, chunliY - 29, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 30, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 29, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 32, chunliY - 29, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 29, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 43, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 29, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 45, chunliY - 29, 0, 5, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 29, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 29, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 29, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 60, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 29, 0, 3, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 64, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 65, chunliY - 29, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 66, chunliY - 29, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 28, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 29, chunliY - 30, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 30, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 30, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 32, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 30, 0, 1, 1, 1, 0x904010 );
+	helper ( chunli, chunliX + 34, chunliY - 30, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 30, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 44, chunliY - 30, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 45, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 46, chunliY - 30, 0, 1, 1, 1, 0x904010 );
+	helper ( chunli, chunliX + 47, chunliY - 30, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 30, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 55, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 30, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 30, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 60, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 30, 0, 4, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 65, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 30, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 67, chunliY - 30, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 27, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 31, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 30, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 31, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 32, chunliY - 31, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 33, chunliY - 31, 0, 2, 1, 1, 0x904010 );
+	helper ( chunli, chunliX + 35, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 31, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 44, chunliY - 31, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 45, chunliY - 31, 0, 4, 1, 1, 0x904010 );
+	helper ( chunli, chunliX + 49, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 31, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 55, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 31, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 31, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 60, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 31, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 62, chunliY - 31, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 31, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 67, chunliY - 31, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 68, chunliY - 31, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 26, chunliY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 32, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 29, chunliY - 32, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 32, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 32, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 32, 0, 1, 1, 1, 0x904010 );
+	helper ( chunli, chunliX + 36, chunliY - 32, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 45, chunliY - 32, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 46, chunliY - 32, 0, 1, 1, 1, 0x904010 );
+	helper ( chunli, chunliX + 47, chunliY - 32, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 32, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 32, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 59, chunliY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 32, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 32, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 32, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 67, chunliY - 32, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 68, chunliY - 32, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 25, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 33, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 28, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 30, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 33, 0, 24, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 55, chunliY - 33, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 33, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 58, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 61, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 33, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 63, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 64, chunliY - 33, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 67, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 68, chunliY - 33, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 33, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 23, chunliY - 34, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 25, chunliY - 34, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 27, chunliY - 34, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 30, chunliY - 34, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 34, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 36, chunliY - 34, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 37, chunliY - 34, 0, 20, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 34, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 61, chunliY - 34, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 64, chunliY - 34, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 67, chunliY - 34, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 68, chunliY - 34, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 34, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 21, chunliY - 35, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 35, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 25, chunliY - 35, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 30, chunliY - 35, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 35, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 36, chunliY - 35, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 37, chunliY - 35, 0, 17, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 35, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 61, chunliY - 35, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 65, chunliY - 35, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 67, chunliY - 35, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 68, chunliY - 35, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 35, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 19, chunliY - 36, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 21, chunliY - 36, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 23, chunliY - 36, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 31, chunliY - 36, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 36, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 37, chunliY - 36, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 36, 0, 16, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 36, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 67, chunliY - 36, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 68, chunliY - 36, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 36, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 15, chunliY - 37, 0, 8, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 31, chunliY - 37, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 37, 0, 21, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 53, chunliY - 37, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 67, chunliY - 37, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 68, chunliY - 37, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 37, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 13, chunliY - 38, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 15, chunliY - 38, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 17, chunliY - 38, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 32, chunliY - 38, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 38, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 39, chunliY - 38, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 42, chunliY - 38, 0, 10, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 52, chunliY - 38, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 38, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 55, chunliY - 38, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 66, chunliY - 38, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 67, chunliY - 38, 0, 2, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 38, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 11, chunliY - 39, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 13, chunliY - 39, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 15, chunliY - 39, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 33, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 39, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 39, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 39, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 42, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 39, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 51, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 39, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 54, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 66, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 67, chunliY - 39, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 39, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 39, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 10, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 11, chunliY - 40, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 14, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 24, chunliY - 40, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 28, chunliY - 40, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 34, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 40, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 39, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 40, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 43, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 40, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 50, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 51, chunliY - 40, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 54, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 65, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 40, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 40, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 40, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 9, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 10, chunliY - 41, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 13, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 23, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 41, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 27, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 41, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 35, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 41, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 40, chunliY - 41, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 41, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 49, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 41, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 52, chunliY - 41, 0, 5, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 64, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 65, chunliY - 41, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 41, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 69, chunliY - 41, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 8, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 9, chunliY - 42, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 12, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 22, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 42, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 27, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 42, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 36, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 37, chunliY - 42, 0, 10, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 47, chunliY - 42, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 42, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 50, chunliY - 42, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 42, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 57, chunliY - 42, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 63, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 64, chunliY - 42, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 42, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 7, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 8, chunliY - 43, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 12, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 22, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 43, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 27, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 43, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 37, chunliY - 43, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 39, chunliY - 43, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 45, chunliY - 43, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 43, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 49, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 43, 0, 9, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 59, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 62, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 63, chunliY - 43, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 67, chunliY - 43, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 68, chunliY - 43, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 6, chunliY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 7, chunliY - 44, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 11, chunliY - 44, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 19, chunliY - 44, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 44, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 27, chunliY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 44, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 44, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 39, chunliY - 44, 0, 6, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 45, chunliY - 44, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 46, chunliY - 44, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 48, chunliY - 44, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 44, 0, 11, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 60, chunliY - 44, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 44, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 67, chunliY - 44, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 6, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 7, chunliY - 45, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 11, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 18, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 19, chunliY - 45, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 26, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 45, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 30, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 42, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 45, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 45, chunliY - 45, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 46, chunliY - 45, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 45, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 51, chunliY - 45, 0, 4, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 55, chunliY - 45, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 57, chunliY - 45, 0, 3, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 60, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 45, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 66, chunliY - 45, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 5, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 6, chunliY - 46, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 10, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 16, chunliY - 46, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 18, chunliY - 46, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 22, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 46, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 25, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 46, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 28, chunliY - 46, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 36, chunliY - 46, 0, 8, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 46, 0, 3, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 47, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 46, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 50, chunliY - 46, 0, 11, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 61, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 46, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 46, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 5, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 6, chunliY - 47, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 10, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 15, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 16, chunliY - 47, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 22, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 47, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 24, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 25, chunliY - 47, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 26, chunliY - 47, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 34, chunliY - 47, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 47, 0, 6, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 42, chunliY - 47, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 44, chunliY - 47, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 47, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 47, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 50, chunliY - 47, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 51, chunliY - 47, 0, 4, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 55, chunliY - 47, 0, 3, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 58, chunliY - 47, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 60, chunliY - 47, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 61, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 47, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 64, chunliY - 47, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 5, chunliY - 48, 0, 5, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 10, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 15, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 16, chunliY - 48, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 18, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 19, chunliY - 48, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 22, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 48, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 27, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 33, chunliY - 48, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 48, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 38, chunliY - 48, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 40, chunliY - 48, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 48, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 47, chunliY - 48, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 48, 0, 8, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 56, chunliY - 48, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 58, chunliY - 48, 0, 4, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 62, chunliY - 48, 0, 2, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 5, chunliY - 49, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 9, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 14, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 15, chunliY - 49, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 18, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 19, chunliY - 49, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 22, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 49, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 26, chunliY - 49, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 32, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 49, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 49, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 38, chunliY - 49, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 40, chunliY - 49, 0, 7, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 47, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 49, 0, 8, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 56, chunliY - 49, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 58, chunliY - 49, 0, 4, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 62, chunliY - 49, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 5, chunliY - 50, 0, 4, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 9, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 13, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 14, chunliY - 50, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 18, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 19, chunliY - 50, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 22, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 23, chunliY - 50, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 29, chunliY - 50, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 50, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 34, chunliY - 50, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 50, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 38, chunliY - 50, 0, 8, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 46, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 50, 0, 9, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 56, chunliY - 50, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 58, chunliY - 50, 0, 4, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 62, chunliY - 50, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 63, chunliY - 50, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 5, chunliY - 51, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 6, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 7, chunliY - 51, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 9, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 11, chunliY - 51, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 14, chunliY - 51, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 17, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 18, chunliY - 51, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 19, chunliY - 51, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 22, chunliY - 51, 0, 11, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 51, 0, 11, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 45, chunliY - 51, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 46, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 51, 0, 6, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 53, chunliY - 51, 0, 7, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 51, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 61, chunliY - 51, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 63, chunliY - 51, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 52, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 6, chunliY - 52, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 7, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 8, chunliY - 52, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 9, chunliY - 52, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 11, chunliY - 52, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 14, chunliY - 52, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 17, chunliY - 52, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 25, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 52, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 33, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 52, 0, 10, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 44, chunliY - 52, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 46, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 52, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 52, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 52, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 56, chunliY - 52, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 57, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 52, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 59, chunliY - 52, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 60, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 52, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 63, chunliY - 52, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 5, chunliY - 53, 0, 3, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 8, chunliY - 53, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 11, chunliY - 53, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 13, chunliY - 53, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 14, chunliY - 53, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 16, chunliY - 53, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 17, chunliY - 53, 0, 8, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 25, chunliY - 53, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 26, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 53, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 32, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 53, 0, 10, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 43, chunliY - 53, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 46, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 53, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 48, chunliY - 53, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 51, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 53, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 54, chunliY - 53, 0, 4, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 58, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 53, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 60, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 61, chunliY - 53, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 63, chunliY - 53, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 5, chunliY - 54, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 6, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 7, chunliY - 54, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 9, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 13, chunliY - 54, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 16, chunliY - 54, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 18, chunliY - 54, 0, 6, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 54, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 26, chunliY - 54, 0, 6, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 54, 0, 4, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 54, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 37, chunliY - 54, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 42, chunliY - 54, 0, 4, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 46, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 47, chunliY - 54, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 49, chunliY - 54, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 51, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 54, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 53, chunliY - 54, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 55, chunliY - 54, 0, 5, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 54, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 61, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 62, chunliY - 54, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 63, chunliY - 54, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 55, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 7, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 8, chunliY - 55, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 9, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 14, chunliY - 55, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 17, chunliY - 55, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 25, chunliY - 55, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 27, chunliY - 55, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 30, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 55, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 55, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 37, chunliY - 55, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 40, chunliY - 55, 0, 6, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 46, chunliY - 55, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 47, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 55, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 51, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 55, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 54, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 55, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 59, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 55, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 62, chunliY - 55, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 4, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 8, chunliY - 56, 0, 2, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 13, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 14, chunliY - 56, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 16, chunliY - 56, 0, 9, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 25, chunliY - 56, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 27, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 28, chunliY - 56, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 30, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 56, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 56, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 38, chunliY - 56, 0, 7, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 45, chunliY - 56, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 47, chunliY - 56, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 56, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 52, chunliY - 56, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 53, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 54, chunliY - 56, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 59, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 56, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 62, chunliY - 56, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 66, chunliY - 56, 0, 3, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 9, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 12, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 13, chunliY - 57, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 14, chunliY - 57, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 15, chunliY - 57, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 19, chunliY - 57, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 20, chunliY - 57, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 22, chunliY - 57, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 24, chunliY - 57, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 25, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 26, chunliY - 57, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 27, chunliY - 57, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 28, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 29, chunliY - 57, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 30, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 57, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 33, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 57, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 57, 0, 3, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 39, chunliY - 57, 0, 4, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 43, chunliY - 57, 0, 3, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 46, chunliY - 57, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 49, chunliY - 57, 0, 5, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 54, chunliY - 57, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 57, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 57, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 62, chunliY - 57, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 57, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 57, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 12, chunliY - 58, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 16, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 17, chunliY - 58, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 19, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 20, chunliY - 58, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 21, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 22, chunliY - 58, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 26, chunliY - 58, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 29, chunliY - 58, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 31, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 58, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 33, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 58, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 58, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 37, chunliY - 58, 0, 8, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 45, chunliY - 58, 0, 5, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 50, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 51, chunliY - 58, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 54, chunliY - 58, 0, 11, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 65, chunliY - 58, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 58, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 16, chunliY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 17, chunliY - 59, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 19, chunliY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 20, chunliY - 59, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 21, chunliY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 22, chunliY - 59, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 29, chunliY - 59, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 59, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 34, chunliY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 59, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 59, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 38, chunliY - 59, 0, 6, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 44, chunliY - 59, 0, 7, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 51, chunliY - 59, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 59, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 55, chunliY - 59, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 59, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 64, chunliY - 59, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 59, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 67, chunliY - 59, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 17, chunliY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 18, chunliY - 60, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 20, chunliY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 21, chunliY - 60, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 26, chunliY - 60, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 32, chunliY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 60, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 34, chunliY - 60, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 60, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 37, chunliY - 60, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 40, chunliY - 60, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 60, 0, 9, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 51, chunliY - 60, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 60, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 54, chunliY - 60, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 60, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 58, chunliY - 60, 0, 6, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 64, chunliY - 60, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 65, chunliY - 60, 0, 3, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 18, chunliY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 19, chunliY - 61, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 23, chunliY - 61, 0, 3, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 33, chunliY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 61, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 35, chunliY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 61, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 37, chunliY - 61, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 40, chunliY - 61, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 61, 0, 8, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 50, chunliY - 61, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 53, chunliY - 61, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 61, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 57, chunliY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 58, chunliY - 61, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 64, chunliY - 61, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 65, chunliY - 61, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 66, chunliY - 61, 0, 2, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 19, chunliY - 62, 0, 4, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 34, chunliY - 62, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 62, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 62, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 37, chunliY - 62, 0, 1, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 38, chunliY - 62, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 41, chunliY - 62, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 62, 0, 7, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 49, chunliY - 62, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 53, chunliY - 62, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 62, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 56, chunliY - 62, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 62, 0, 8, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 65, chunliY - 62, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 67, chunliY - 62, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 68, chunliY - 62, 0, 2, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 35, chunliY - 63, 0, 14, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 51, chunliY - 63, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 63, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 54, chunliY - 63, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 63, 0, 1, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 56, chunliY - 63, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 63, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 66, chunliY - 63, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 68, chunliY - 63, 0, 2, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 70, chunliY - 63, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 35, chunliY - 64, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 64, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 43, chunliY - 64, 0, 5, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 48, chunliY - 64, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 50, chunliY - 64, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 51, chunliY - 64, 0, 3, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 54, chunliY - 64, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 56, chunliY - 64, 0, 11, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 67, chunliY - 64, 0, 3, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 35, chunliY - 65, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 65, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 43, chunliY - 65, 0, 5, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 48, chunliY - 65, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 51, chunliY - 65, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 55, chunliY - 65, 0, 13, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 68, chunliY - 65, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 35, chunliY - 66, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 66, 0, 7, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 43, chunliY - 66, 0, 5, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 48, chunliY - 66, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 53, chunliY - 66, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 54, chunliY - 66, 0, 15, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 69, chunliY - 66, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 34, chunliY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 67, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 43, chunliY - 67, 0, 2, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 45, chunliY - 67, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 48, chunliY - 67, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 49, chunliY - 67, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 52, chunliY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 67, 0, 9, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 62, chunliY - 67, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 63, chunliY - 67, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 69, chunliY - 67, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 34, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 35, chunliY - 68, 0, 8, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 43, chunliY - 68, 0, 1, 1, 1, 0xA0B0D0 );
+	helper ( chunli, chunliX + 44, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 45, chunliY - 68, 0, 4, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 49, chunliY - 68, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 50, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 52, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 53, chunliY - 68, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 58, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 68, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 63, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 64, chunliY - 68, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 67, chunliY - 68, 0, 1, 1, 1, 0x000000 );	
+	helper ( chunli, chunliX + 68, chunliY - 68, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 70, chunliY - 68, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 33, chunliY - 69, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 36, chunliY - 69, 0, 6, 1, 1, 0xF0F0F0 );
+	helper ( chunli, chunliX + 42, chunliY - 69, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 69, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 46, chunliY - 69, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 69, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 50, chunliY - 69, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 51, chunliY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 69, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 69, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 69, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 63, chunliY - 69, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 64, chunliY - 69, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 68, chunliY - 69, 0, 1, 1, 1, 0x000000 );	
+	helper ( chunli, chunliX + 69, chunliY - 69, 0, 2, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 71, chunliY - 69, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 33, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 70, 0, 2, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 70, 0, 6, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 42, chunliY - 70, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 43, chunliY - 70, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 45, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 46, chunliY - 70, 0, 3, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 49, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 70, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 51, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 70, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 57, chunliY - 70, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 58, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 70, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 64, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 65, chunliY - 70, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 69, chunliY - 70, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 71, chunliY - 70, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 72, chunliY - 70, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 33, chunliY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 34, chunliY - 71, 0, 5, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 39, chunliY - 71, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 41, chunliY - 71, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 43, chunliY - 71, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 44, chunliY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 45, chunliY - 71, 0, 5, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 50, chunliY - 71, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 71, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 58, chunliY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 71, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 64, chunliY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 65, chunliY - 71, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 71, chunliY - 71, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 72, chunliY - 71, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 73, chunliY - 71, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 32, chunliY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 72, 0, 3, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 36, chunliY - 72, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 37, chunliY - 72, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 39, chunliY - 72, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 42, chunliY - 72, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 44, chunliY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 45, chunliY - 72, 0, 6, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 51, chunliY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 72, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 57, chunliY - 72, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 72, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 65, chunliY - 72, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 72, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 70, chunliY - 72, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 73, chunliY - 72, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 74, chunliY - 72, 0, 2, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 32, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 73, 0, 7, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 40, chunliY - 73, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 42, chunliY - 73, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 43, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 73, 0, 7, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 51, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 52, chunliY - 73, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 58, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 73, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 63, chunliY - 73, 0, 3, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 73, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 72, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 73, chunliY - 73, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 76, chunliY - 73, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 32, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 33, chunliY - 74, 0, 7, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 40, chunliY - 74, 0, 1, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 41, chunliY - 74, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 43, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 74, 0, 6, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 50, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 51, chunliY - 74, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 58, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 74, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 65, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 66, chunliY - 74, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 72, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 73, chunliY - 74, 0, 3, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 76, chunliY - 74, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 31, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 75, 0, 7, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 39, chunliY - 75, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 41, chunliY - 75, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 43, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 44, chunliY - 75, 0, 5, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 49, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 75, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 58, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 59, chunliY - 75, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 65, chunliY - 75, 0, 2, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 67, chunliY - 75, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 71, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 72, chunliY - 75, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 76, chunliY - 75, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 31, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 76, 0, 7, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 39, chunliY - 76, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 41, chunliY - 76, 0, 1, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 76, 0, 5, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 48, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 76, 0, 7, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 56, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 59, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 60, chunliY - 76, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 64, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 67, chunliY - 76, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 71, chunliY - 76, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 75, chunliY - 76, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 31, chunliY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 32, chunliY - 77, 0, 6, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 38, chunliY - 77, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 40, chunliY - 77, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 77, 0, 5, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 48, chunliY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 49, chunliY - 77, 0, 6, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 55, chunliY - 77, 0, 1, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 60, chunliY - 77, 0, 4, 1, 1, 0x000000 );
+
+	helper ( chunli, chunliX + 69, chunliY - 77, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 70, chunliY - 77, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 71, chunliY - 77, 0, 4, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 75, chunliY - 77, 0, 1, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 76, chunliY - 77, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 30, chunliY - 78, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 78, 0, 7, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 38, chunliY - 78, 0, 2, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 40, chunliY - 78, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 78, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 78, 0, 6, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 49, chunliY - 78, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 50, chunliY - 78, 0, 4, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 54, chunliY - 78, 0, 2, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 70, chunliY - 78, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 71, chunliY - 78, 0, 5, 1, 1, 0xF0D0B0 );
+	helper ( chunli, chunliX + 76, chunliY - 78, 0, 1, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 30, chunliY - 79, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 79, 0, 6, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 37, chunliY - 79, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 40, chunliY - 79, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 79, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 79, 0, 7, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 50, chunliY - 79, 0, 7, 1, 1, 0x000000 );
+	
+	helper ( chunli, chunliX + 71, chunliY - 79, 0, 5, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 30, chunliY - 80, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 31, chunliY - 80, 0, 6, 1, 1, 0x0070F0 );
+	helper ( chunli, chunliX + 37, chunliY - 80, 0, 3, 1, 1, 0x0040A0 );
+	helper ( chunli, chunliX + 40, chunliY - 80, 0, 2, 1, 1, 0xF0E000 );
+	helper ( chunli, chunliX + 42, chunliY - 80, 0, 1, 1, 1, 0x000000 );
+	helper ( chunli, chunliX + 43, chunliY - 80, 0, 8, 1, 1, 0xA04010 );
+	helper ( chunli, chunliX + 51, chunliY - 80, 0, 6, 1, 1, 0x000000 );
+
+
+	helper ( chunli, chunliX + 31, chunliY - 81, 0, 26, 1, 1, 0x000000 );
+
+}
+</script>
+
+</body>
+</html>
